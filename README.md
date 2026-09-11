@@ -162,7 +162,7 @@ house-price-prediction/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/house-price-prediction.git
+git clone https://github.com/Ahsan-muhd-444/house-price-prediction.git
 cd house-price-prediction
 ```
 
@@ -214,4 +214,4 @@ This project is released under the [MIT License](LICENSE).
 
 ---
 
-<p align="center">Built by <strong>Mohammad Hassan</strong></p>
+<p align="center">Built by <strong>Muhammad Ahsan</strong></p>
