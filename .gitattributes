@@ -1,0 +1,17 @@
+# Text files are stored with LF line endings.
+* text=auto eol=lf
+
+# The dataset must stay byte-for-byte identical on every platform: its SHA-256
+# is pinned in amesml.data. Without this, a Windows checkout with
+# core.autocrlf=true (the default on GitHub's Windows runners) rewrites it.
+data/** -text
+
+# Notebooks are documentation: no line-ending rewrites, and excluded from
+# GitHub's language statistics so the repository is reported as Python.
+*.ipynb -text linguist-documentation
+
+# Binary assets.
+*.png binary
+*.jpg binary
+*.pdf binary
+*.joblib binary
