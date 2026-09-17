@@ -14,6 +14,26 @@ build/
 dist/
 *.egg-info/
 
+# Tooling caches and reports
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# MkDocs build output
+site/
+
+# Trained models are build artefacts: regenerate them with `amesml train`.
+# The notebook's original pipelines in models/notebook/ stay tracked.
+models/*/
+!models/notebook/
+
+# Interrupted dataset downloads
+*.part
+
 # Jupyter
 .ipynb_checkpoints/
 */.ipynb_checkpoints/*
