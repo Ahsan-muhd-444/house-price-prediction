@@ -1,0 +1,27 @@
+# Every TrainConfig option, with its default. Use with:
+#   amesml train --config examples/config.example.yaml
+# Command-line --task and --model override the values here.
+
+task: regression            # regression | classification
+model: gbm                  # linear | ridge | lasso | gbm
+target: SalePrice
+id_column: Id
+test_size: 0.2
+random_state: 42
+
+# Classification only: a price, or "median" for the training rows' median.
+threshold: median
+stratify: false             # classification only
+
+# Derived features: total area, house and remodel age, bathrooms, porch area.
+engineer_features: true
+
+# Leave unset to infer column types from the data.
+numeric_features: null
+categorical_features: null
+categorical_codes: [MSSubClass, MoSold]
+zero_fill_features: [GarageYrBlt, MasVnrArea]
+
+drop_first: true
+alpha: null                 # ridge/lasso strength; null = cross-validated default
+max_iter: 5000
