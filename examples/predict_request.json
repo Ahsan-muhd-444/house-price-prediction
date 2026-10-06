@@ -1,0 +1,22 @@
+{
+  "records": [
+    {
+      "OverallQual": 7,
+      "GrLivArea": 1710,
+      "YearBuilt": 2003,
+      "YearRemodAdd": 2003,
+      "TotalBsmtSF": 856,
+      "GarageCars": 2,
+      "FullBath": 2,
+      "HalfBath": 1,
+      "Neighborhood": "CollgCr",
+      "PoolQC": null
+    },
+    {
+      "OverallQual": 5,
+      "GrLivArea": 1050,
+      "YearBuilt": 1958,
+      "Neighborhood": "NAmes"
+    }
+  ]
+}
