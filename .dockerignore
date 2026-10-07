@@ -1,0 +1,12 @@
+# An allowlist: only what the image needs is sent to the build.
+*
+!pyproject.toml
+!README.md
+!LICENSE
+!src
+!data
+!models
+data/*.txt
+models/notebook
+**/__pycache__
+**/*.pyc
