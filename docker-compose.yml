@@ -1,0 +1,10 @@
+# Build and run the API locally:
+#   docker compose up --build
+# then open http://localhost:8000/docs
+services:
+  api:
+    build: .
+    image: amesml:local
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
