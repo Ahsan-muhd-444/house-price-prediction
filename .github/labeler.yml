@@ -1,0 +1,21 @@
+# Labels applied to pull requests by .github/workflows/labeler.yml.
+docs:
+  - changed-files:
+      - any-glob-to-any-file: ["docs/**", "**/*.md", "mkdocs.yml", "examples/**", "notebooks/**"]
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: ["tests/**"]
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          [".github/**", ".pre-commit-config.yaml", "Makefile", "Dockerfile", ".dockerignore"]
+
+core:
+  - changed-files:
+      - any-glob-to-any-file: ["src/amesml/**", "pyproject.toml"]
+
+api:
+  - changed-files:
+      - any-glob-to-any-file: ["src/amesml/api.py", "Dockerfile", "docker-compose.yml"]
