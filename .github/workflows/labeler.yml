@@ -1,0 +1,15 @@
+name: Labeler
+
+# pull_request_target runs in the context of the base branch, so it can label
+# pull requests from forks. It never checks out or runs the pull request's code.
+on: pull_request_target
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v7
