@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/Ahsan-muhd-444/house-price-prediction/discussions
+    about: Ideas, show-and-tell and open-ended questions.
+  - name: Documentation
+    url: https://ahsan-muhd-444.github.io/house-price-prediction/
+    about: Installation, quickstart and user guide.
+  - name: Report a security vulnerability
+    url: https://github.com/Ahsan-muhd-444/house-price-prediction/security/advisories/new
+    about: Please report security problems privately.
