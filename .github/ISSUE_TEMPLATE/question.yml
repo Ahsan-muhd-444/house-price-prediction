@@ -1,0 +1,21 @@
+name: Question
+description: Ask how to do something with amesml.
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check the [documentation](https://ahsan-muhd-444.github.io/house-price-prediction/)
+        first. Open-ended conversations suit
+        [Discussions](https://github.com/Ahsan-muhd-444/house-price-prediction/discussions) better.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What have you tried?
+      description: Commands, code or documentation pages you have already looked at.
