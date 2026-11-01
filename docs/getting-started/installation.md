@@ -2,13 +2,25 @@
 
 amesml needs Python 3.9 or newer.
 
+amesml is distributed through GitHub releases. Install a tagged version
+straight from the repository:
+
 ```bash
-pip install amesml                 # the library and the amesml command
-pip install "amesml[api]"          # plus the REST API (FastAPI, uvicorn)
-pip install "amesml[plots]"        # plus figure generation (matplotlib)
+pip install "amesml @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"            # the library and the amesml command
+pip install "amesml[api] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"       # plus the REST API (FastAPI, uvicorn)
+pip install "amesml[plots] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"     # plus figure generation (matplotlib)
 ```
 
-Extras can be combined: `pip install "amesml[api,plots]"`.
+Extras can be combined: `pip install "amesml[api,plots] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"`.
+
+## From a release wheel
+
+Every [GitHub release](https://github.com/Ahsan-muhd-444/house-price-prediction/releases)
+has the wheel and source distribution attached. Download the `.whl` and run:
+
+```bash
+pip install amesml-0.1.1-py3-none-any.whl
+```
 
 ## From a clone
 
@@ -26,7 +38,7 @@ For development, install `".[dev]"` instead; see
 ## The dataset
 
 The repository includes the Kaggle training file at `data/train.csv`. When you
-install from PyPI, download it once:
+install from GitHub or a release wheel, download it once:
 
 ```bash
 amesml data download
