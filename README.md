@@ -7,8 +7,8 @@
 <p align="center">
   <a href="https://github.com/Ahsan-muhd-444/house-price-prediction/actions/workflows/ci.yml"><img src="https://github.com/Ahsan-muhd-444/house-price-prediction/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://ahsan-muhd-444.github.io/house-price-prediction/"><img src="https://github.com/Ahsan-muhd-444/house-price-prediction/actions/workflows/docs.yml/badge.svg" alt="Docs"></a>
-  <a href="https://pypi.org/project/amesml/"><img src="https://img.shields.io/pypi/v/amesml" alt="PyPI version"></a>
-  <a href="https://pypi.org/project/amesml/"><img src="https://img.shields.io/pypi/pyversions/amesml" alt="Python versions"></a>
+  <a href="https://github.com/Ahsan-muhd-444/house-price-prediction/releases/latest"><img src="https://img.shields.io/github/v/release/Ahsan-muhd-444/house-price-prediction" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue" alt="Python versions">
   <a href="https://github.com/Ahsan-muhd-444/house-price-prediction/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
   <a href="https://codecov.io/gh/Ahsan-muhd-444/house-price-prediction"><img src="https://codecov.io/gh/Ahsan-muhd-444/house-price-prediction/branch/main/graph/badge.svg" alt="Coverage"></a>
   <a href="https://github.com/Ahsan-muhd-444/house-price-prediction/actions/workflows/codeql.yml"><img src="https://github.com/Ahsan-muhd-444/house-price-prediction/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"></a>
@@ -29,7 +29,7 @@ library versions.
 - **Reproducible.** Defaults reproduce the original analysis to within about 5%, all
   models are seeded, and each saved model carries its configuration, metrics,
   a fingerprint of its training data and a checksum of itself.
-- **Installable.** `pip install amesml`: a typed library and an `amesml`
+- **Installable.** One `pip install` from GitHub: a typed library and an `amesml`
   command, tested on Linux, macOS and Windows for Python 3.9-3.13 with 99%
   coverage.
 - **Serveable.** A FastAPI service with validated, partial-record requests and
@@ -38,9 +38,12 @@ library versions.
 ## Install
 
 ```bash
-pip install amesml                # library and CLI
-pip install "amesml[api]"         # plus the REST API
+pip install "amesml @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"         # library and CLI
+pip install "amesml[api] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"    # plus the REST API
 ```
+
+Wheels and source distributions are also attached to every
+[GitHub release](https://github.com/Ahsan-muhd-444/house-price-prediction/releases).
 
 ## 60-second quickstart
 
@@ -224,7 +227,7 @@ and the full project report is
   author  = {Ahsan, Muhammad},
   title   = {amesml: Reproducible Ames Housing price prediction},
   year    = {2026},
-  version = {0.1.0},
+  version = {0.1.1},
   url     = {https://github.com/Ahsan-muhd-444/house-price-prediction}
 }
 

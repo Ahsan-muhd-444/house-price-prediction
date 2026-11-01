@@ -10,7 +10,7 @@ authors:
   - family-names: Ahsan
     given-names: Muhammad
     affiliation: COMSATS University Lahore
-version: 0.1.0
+version: 0.1.1
 date-released: "2026-11-01"
 license: MIT
 repository-code: "https://github.com/Ahsan-muhd-444/house-price-prediction"

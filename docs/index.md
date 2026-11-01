@@ -9,7 +9,7 @@ from 79 property features, and separately whether it sells at or above the
 median price.
 
 ```bash
-pip install amesml
+pip install "amesml @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"
 amesml train --model gbm
 ```
 
