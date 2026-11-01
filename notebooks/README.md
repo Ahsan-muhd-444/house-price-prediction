@@ -10,8 +10,9 @@ every output and figure as it was originally run.
 ## The package supersedes the modelling code
 
 Everything from the train/test split onwards now lives in the `amesml` package,
-and reproduces the notebook's published numbers exactly - to the cent for the
-regression. In a notebook you can replace the modelling cells with:
+and reproduces the notebook's published numbers closely - within about 5% for
+the regression, and to the cent for the classification. In a notebook you can
+replace the modelling cells with:
 
 ```python
 from amesml import TrainConfig, load_ames, train

@@ -70,7 +70,12 @@ considerations*).
 
 ## Quantitative analyses
 
-Held-out test split, default configuration of each model:
+Held-out test split, default configuration of each model. The linear
+regression row reproduces the notebook to the cent only on Windows with
+Python 3.11-3.13; on other platforms and Python versions it lands within
+about 5%, because that model is fitted by an iterative solver on an
+ill-conditioned sparse matrix (see DECISIONS D1 and D2). The classification
+figures reproduce exactly everywhere.
 
 | Model | MAE | RMSE | R² | 5-fold CV RMSE |
 |---|---:|---:|---:|---:|

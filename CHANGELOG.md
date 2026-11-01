@@ -6,6 +6,22 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- `test_notebook_parity.py` asserted the regression figures with an absolute
+  tolerance of one cent, which only held on Windows with Python 3.11-3.13.
+  The reference values are unchanged; they are now asserted with a 6%
+  relative tolerance, covering the 4.3% spread observed across the CI
+  matrix. See `docs/DECISIONS.md` D29.
+- `test_cli.py::test_plots_command_wiring` failed wherever the temporary
+  directory was long enough for Rich to wrap the filename mid-word. The
+  test now widens the console for its own duration.
+
+### Changed
+
+- Documentation no longer claims the defaults reproduce the notebook
+  "exactly" or "to the cent" without qualification.
+
 ## [0.1.0] - 2026-11-01
 
 First packaged release of the house-price-prediction coursework as `amesml`.
@@ -16,9 +32,12 @@ First packaged release of the house-price-prediction coursework as `amesml`.
   `build_preprocessor`, `train_regressor`, `train_classifier`, `train`,
   `evaluate_regressor`, `evaluate_classifier`, `predict`, `save_model` and
   `load_model`.
-- Defaults that reproduce the original notebook's published results exactly
+- Defaults that reproduce the original notebook's published results closely
   (linear regression MAE $21,139.99, R² 0.868; logistic regression accuracy
-  94.5%, F1 93.9%).
+  94.5%, F1 93.9%). The classification figures reproduce exactly; the
+  regression figures reproduce to the cent on Windows with Python 3.11-3.13
+  and to within about 5% elsewhere, because they come from an iterative
+  solver on an ill-conditioned matrix. See `docs/DECISIONS.md` D1.
 - Ridge, lasso and histogram gradient-boosting models for both regression and
   above/below-median classification, with cross-validated default
   regularisation.

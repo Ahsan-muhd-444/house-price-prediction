@@ -6,7 +6,7 @@ from the original specification for the conversion; each says why.
 
 ## Reproducing the notebook
 
-### D1. The defaults reproduce the notebook exactly
+### D1. The defaults reproduce the notebook closely
 
 The package's first promise is reproducibility, so `TrainConfig()` with no
 arguments rebuilds the notebook's models: the same 80/20 split with seed 42,
@@ -17,7 +17,11 @@ and `LogisticRegression(max_iter=5000)` for the class. Every improvement
 Result, verified by `tests/test_notebook_parity.py` on the real data: MAE
 $21,139.99, RMSE $31,790.77, R² 0.8682386; accuracy 0.9452, precision 0.9254,
 recall 0.9538, F1 0.9394, confusion matrix `[[152, 10], [6, 124]]` - identical
-to the notebook's recorded outputs.
+to the notebook's recorded outputs on Windows with Python 3.11-3.13.
+
+The classification figures reproduce exactly on every platform. The
+regression figures do not: they land within about 5% elsewhere, for the
+reason given in D2 and quantified in D29.
 
 ### D2. The notebook's linear regression was solved by LSQR, and amesml keeps it so
 
@@ -298,3 +302,52 @@ real defects before any user did:
   now escaped.
 - **Click 8.2 removed `CliRunner(mix_stderr=...)`** while Python 3.9 can only
   install Click 8.1, which needs it; the tests handle both.
+
+### D29. The notebook-parity test uses a relative tolerance
+
+**Deviation.** D1 originally claimed the regression figures reproduce
+exactly. They do not, outside one environment.
+
+`tests/test_notebook_parity.py` asserted MAE, RMSE and R2 with an absolute
+tolerance of one cent. That passed on Windows with Python 3.11-3.13 and
+failed on every Linux and macOS job, and on Windows with Python 3.9.
+Observed MAE across the CI matrix:
+
+| Environment | MAE |
+| --- | ---: |
+| Windows, Python 3.11-3.13 | $21,139.99 (the notebook's figure) |
+| macOS, Python 3.11-3.13 | $20,850.57 |
+| Ubuntu 3.11, Windows 3.9 | $20,230.73 |
+
+A spread of about 4.3%.
+
+**The cause is the solver, not the split.** The split is seeded with 42 and
+is identical everywhere - the same 292 test rows. Holding that split fixed
+and changing only how the linear model is fitted moves MAE from $21,139.99
+(sparse, LSQR) to $20,893.06 (dense, exact least squares): about $247 on
+identical data. As D2 explains, the design matrix is sparse, ill-conditioned
+and rank-deficient, so `LinearRegression` runs LSQR, which stops on a
+tolerance rather than converging. Where it stops depends on the
+scikit-learn, scipy and BLAS build in use.
+
+**Decision.** Keep $21,139.99 and the other published figures as the
+reference values, and assert them with `pytest.approx(..., rel=0.06)`.
+
+**Rejected alternatives.**
+
+- *Pin the dependencies to the versions that produce $21,139.99.* `amesml` is
+  a library. Freezing downstream users to one resolution of scikit-learn,
+  scipy and numpy so that one test passes is a worse trade than a looser
+  assertion.
+- *Mark the test `xfail` off Windows.* That hides the check across most of
+  the matrix, which is where a regression would actually surface.
+- *Drop the parity test.* It is the package's central correctness claim.
+
+6% leaves margin over the observed 4.3% while staying far tighter than the
+gap to any other model: ridge ($19,006), lasso ($18,550) and gradient
+boosting ($16,826) all sit 10-20% from the linear baseline, so a modelling
+or preprocessing regression still fails the test.
+
+The classification figures are asserted exactly, unchanged: logistic
+regression converges to the same optimum on sparse and dense input (D2), and
+reproduced to the cent on all sixteen CI jobs.

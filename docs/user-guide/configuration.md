@@ -29,7 +29,10 @@ Unknown keys are rejected, so a typo cannot silently fall back to a default.
 | `alpha` | per model | regularisation strength for `ridge` and `lasso` |
 | `max_iter` | `5000` | iteration limit for iterative solvers |
 
-The defaults reproduce the original notebook exactly.
+The defaults reproduce the original notebook closely - to the cent for the
+classification, and to within about 5% for the regression figures, which
+come from an iterative solver whose stopping point shifts with the
+scikit-learn, scipy and BLAS build.
 
 ## Model families
 

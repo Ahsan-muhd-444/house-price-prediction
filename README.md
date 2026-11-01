@@ -20,12 +20,13 @@
 house sells above the median price - from 79 property features. It began as a
 university machine-learning notebook and is now an installable Python package
 with a command-line tool, a REST API and a Docker image. The default models
-reproduce the notebook's published results exactly, and every saved model
-records how it was trained, on which data, with which library versions.
+reproduce the notebook's published results closely - within about 5% - and
+every saved model records how it was trained, on which data, with which
+library versions.
 
 ## Why amesml
 
-- **Reproducible.** Defaults reproduce the original analysis to the cent, all
+- **Reproducible.** Defaults reproduce the original analysis to within about 5%, all
   models are seeded, and each saved model carries its configuration, metrics,
   a fingerprint of its training data and a checksum of itself.
 - **Installable.** `pip install amesml`: a typed library and an `amesml`
@@ -73,13 +74,19 @@ Held-out test split from the notebook (292 houses, seed 42):
 
 | Model | MAE | RMSE | R² |
 | --- | ---: | ---: | ---: |
-| Linear regression (notebook, reproduced exactly) | ~$21,140 | ~$31,791 | 0.868 |
+| Linear regression (notebook, reproduced within ~5%) | ~$21,140 | ~$31,791 | 0.868 |
 | Gradient boosting | ~$16,826 | ~$29,462 | 0.887 |
 
 | Model | Accuracy | Precision | Recall | F1 |
 | --- | ---: | ---: | ---: | ---: |
 | Logistic regression (notebook, reproduced exactly) | 94.5% | 92.5% | 95.4% | 93.9% |
 | Gradient boosting | 95.2% | 92.0% | 97.7% | 94.8% |
+
+The linear-regression figures come from an iterative solver on an
+ill-conditioned matrix, so they reproduce to the cent only on Windows with
+Python 3.11-3.13 and to within about 5% elsewhere; the classification
+figures reproduce exactly everywhere. See
+[docs/DECISIONS.md](docs/DECISIONS.md).
 
 The classification threshold is the median sale price of the training rows,
 $165,000. Cross-validated scores for every model, and an analysis of where the

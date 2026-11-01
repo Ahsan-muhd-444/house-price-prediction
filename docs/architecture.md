@@ -53,7 +53,7 @@ flowchart TB
 
 Scaling is applied only where it matters (the penalised and logistic models).
 The matrix is sparse for the linear models - scikit-learn's default, and the
-reason the defaults reproduce the notebook exactly - and dense for gradient
+reason the defaults reproduce the notebook's figures - and dense for gradient
 boosting, which requires it.
 
 ## A saved model

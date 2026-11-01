@@ -16,7 +16,8 @@ amesml train --model gbm
 ## Why amesml
 
 - **Reproducible.** The default models reproduce the original notebook's
-  published results to the cent, every model is seeded, and each saved model
+  published results closely - within about 5% - every model is seeded, and
+  each saved model
   records the exact configuration, library versions and a fingerprint of the
   data it was trained on.
 - **Installable.** A typed Python package with a CLI, tested on Linux, macOS

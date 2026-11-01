@@ -8,7 +8,7 @@ columns from raw inputs at prediction time.
 
 The original notebook did not engineer features; these are the standard Ames
 derivations. They are opt-in so that the default models reproduce the notebook's
-published results exactly. See ``docs/benchmarks.md`` for their effect.
+published results. See ``docs/benchmarks.md`` for their effect.
 """
 
 from __future__ import annotations
