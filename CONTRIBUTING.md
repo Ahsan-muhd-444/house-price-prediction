@@ -89,6 +89,8 @@ Use `feat!:` or a `BREAKING CHANGE:` footer for incompatible changes.
    git push origin main vX.Y.Z
    ```
 
-4. The release workflow checks that the tag matches the version, builds the
-   distributions, publishes them to PyPI with trusted publishing and creates a
-   GitHub release with generated notes.
+4. Publish a GitHub release for the tag (Releases -> Draft a new release ->
+   choose the tag -> Generate release notes -> Publish). The release workflow
+   then checks that the tag matches the version, builds the wheel and source
+   distribution, verifies them with `twine check`, and attaches them to the
+   release.
