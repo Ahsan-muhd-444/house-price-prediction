@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-01
+
 ### Fixed
 
 - `test_notebook_parity.py` asserted the regression figures with an absolute
@@ -17,8 +19,17 @@ All notable changes to this project are documented here. The format follows
   directory was long enough for Rich to wrap the filename mid-word. The
   test now widens the console for its own duration.
 
+- CI no longer fails on `ubuntu-latest` with Python 3.9: Ubuntu 26.04 runners
+  have no Python 3.9 build, so that one combination is skipped. Python 3.9 is
+  still tested on macOS and Windows.
+
 ### Changed
 
+- Releases are distributed through GitHub: the release workflow now runs when
+  a GitHub release is published and attaches the wheel and source
+  distribution to it. Install with
+  `pip install "amesml @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"`.
+  Publishing to PyPI is deferred.
 - Documentation no longer claims the defaults reproduce the notebook
   "exactly" or "to the cent" without qualification.
 
