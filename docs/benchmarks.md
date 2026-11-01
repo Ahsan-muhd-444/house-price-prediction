@@ -20,6 +20,8 @@ model's default configuration. Two views of each model:
 | ridge | 10 | $19,006 | $30,751 | 0.8767 | 11.57% | $33,279 ± 11,554 |
 | lasso | 300 | $18,550 | $31,581 | 0.8700 | 11.16% | $33,667 ± 12,177 |
 | gbm | - | $16,826 | $29,462 | 0.8868 | 10.02% | $29,586 ± 6,396 |
+| xgboost | - | $18,230 | $28,401 | 0.8948 | 10.81% | $31,954 ± 6,990 |
+| lightgbm | - | $16,894 | $29,100 | 0.8896 | 10.10% | $29,714 ± 6,428 |
 | gbm + engineered features | - | $16,857 | $29,472 | 0.8868 | 9.87% | $28,881 ± 6,407 |
 
 ## Classification: at or above the median sale price
@@ -33,6 +35,8 @@ the notebook split).
 | ridge | 30 | 95.21% | 93.28% | 96.15% | 94.70% | 0.9851 | 0.9779 ± 0.0062 |
 | lasso | 3 | 94.52% | 92.54% | 95.38% | 93.94% | 0.9869 | 0.9780 ± 0.0060 |
 | gbm | - | 95.21% | 92.03% | 97.69% | 94.78% | 0.9887 | 0.9771 ± 0.0051 |
+| xgboost | - | 95.55% | 93.33% | 96.92% | 95.09% | 0.9848 | 0.9766 ± 0.0044 |
+| lightgbm | - | 95.89% | 93.38% | 97.69% | 95.49% | 0.9871 | 0.9776 ± 0.0059 |
 | gbm + engineered features | - | 95.21% | 92.03% | 97.69% | 94.78% | 0.9870 | 0.9781 ± 0.0049 |
 
 ## Reading the numbers
@@ -48,6 +52,6 @@ the notebook split).
 
 ## Environment
 
-Generated on 2026-11-01 with amesml 0.1.0, Python 3.12.16, scikit-learn 1.9.1, pandas 3.1.0, NumPy 2.5.4.
+Generated on 2026-11-01 with amesml 0.1.0, Python 3.14.3, scikit-learn 1.9.1, pandas 3.1.0, NumPy 2.5.4, xgboost 3.4.1, lightgbm 4.7.0.
 
 Regenerate with `make benchmark` or `python scripts/benchmark.py`.

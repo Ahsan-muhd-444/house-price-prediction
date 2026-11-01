@@ -26,6 +26,8 @@ def test_defaults_reproduce_the_notebook() -> None:
     [
         (TrainConfig(model="linear"), None),
         (TrainConfig(model="gbm", alpha=5.0), None),
+        (TrainConfig(model="xgboost", alpha=5.0), None),
+        (TrainConfig(model="lightgbm", alpha=5.0), None),
         (TrainConfig(model="ridge"), DEFAULT_ALPHAS[("regression", "ridge")]),
         (TrainConfig(model="lasso"), DEFAULT_ALPHAS[("regression", "lasso")]),
         (TrainConfig(task="classification", model="ridge"), 30.0),
@@ -40,7 +42,7 @@ def test_resolved_alpha(config: TrainConfig, expected: float | None) -> None:
     ("changes", "message"),
     [
         ({"task": "forecasting"}, "task must be one of"),
-        ({"model": "xgboost"}, "model must be one of"),
+        ({"model": "catboost"}, "model must be one of"),
         ({"target": ""}, "target must be"),
         ({"id_column": 3}, "id_column"),
         ({"test_size": 0}, "test_size"),

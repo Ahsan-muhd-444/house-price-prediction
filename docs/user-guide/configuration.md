@@ -13,7 +13,7 @@ Unknown keys are rejected, so a typo cannot silently fall back to a default.
 | Option | Default | Meaning |
 |---|---|---|
 | `task` | `regression` | `regression` predicts the price; `classification` predicts at/above `threshold` |
-| `model` | `linear` | `linear`, `ridge`, `lasso` or `gbm` (see below) |
+| `model` | `linear` | `linear`, `ridge`, `lasso`, `gbm`, `xgboost` or `lightgbm` (see below) |
 | `target` | `SalePrice` | target column |
 | `id_column` | `Id` | identifier, never used as a feature |
 | `test_size` | `0.2` | share of rows held out by `train` |
@@ -42,10 +42,17 @@ scikit-learn, scipy and BLAS build.
 | `ridge` | ridge regression | L2-penalised logistic regression | 10 / 30 |
 | `lasso` | lasso | L1-penalised logistic regression | 300 / 3 |
 | `gbm` | histogram gradient boosting | histogram gradient boosting | - |
+| `xgboost` | `XGBRegressor` | `XGBClassifier` | - |
+| `lightgbm` | `LGBMRegressor` | `LGBMClassifier` | - |
 
 For classification `C = 1 / alpha`, so in both tasks a larger `alpha` means a
 simpler model. The defaults were chosen by 5-fold cross-validation on the
 training split; see [Design decisions](../DECISIONS.md).
+
+`xgboost` and `lightgbm` use those libraries with their default settings,
+seeded from `random_state`. They are an optional extra, installed with
+`pip install "amesml[boosting]"`; without it, training one of them fails
+with an error naming the extra.
 
 ## Overriding feature types
 

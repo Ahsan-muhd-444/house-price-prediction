@@ -3,7 +3,7 @@
 # Command-line --task and --model override the values here.
 
 task: regression            # regression | classification
-model: gbm                  # linear | ridge | lasso | gbm
+model: gbm                  # linear | ridge | lasso | gbm | xgboost | lightgbm
 target: SalePrice
 id_column: Id
 test_size: 0.2

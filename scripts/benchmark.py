@@ -16,6 +16,8 @@ For each task and model the script reports two things:
 from __future__ import annotations
 
 import argparse
+import importlib.metadata
+import importlib.util
 import platform
 import warnings
 from collections.abc import Iterator
@@ -32,7 +34,9 @@ from amesml import ClassificationMetrics, RegressionMetrics, TrainConfig, __vers
 from amesml import train as train_model
 from amesml.models import build_pipeline, plan_features, price_labels, resolve_threshold
 
-MODELS = ("linear", "ridge", "lasso", "gbm")
+# The boosting extra is optional: its models are benchmarked only when installed.
+BOOSTING = tuple(lib for lib in ("xgboost", "lightgbm") if importlib.util.find_spec(lib))
+MODELS = ("linear", "ridge", "lasso", "gbm", *BOOSTING)
 
 
 @dataclass(frozen=True)
@@ -85,6 +89,10 @@ def run(frame: pd.DataFrame) -> dict[str, list[Row]]:
 def alpha_note(config: TrainConfig) -> str:
     alpha = config.resolved_alpha
     return "-" if alpha is None else f"{alpha:g}"
+
+
+def boosting_versions() -> str:
+    return "".join(f", {lib} {importlib.metadata.version(lib)}" for lib in BOOSTING)
 
 
 def render(results: dict[str, list[Row]]) -> str:
@@ -151,7 +159,7 @@ def render(results: dict[str, list[Row]]) -> str:
         "",
         f"Generated on {date.today().isoformat()} with amesml {__version__}, Python "
         f"{platform.python_version()}, scikit-learn {sklearn.__version__}, pandas "
-        f"{pd.__version__}, NumPy {np.__version__}.",
+        f"{pd.__version__}, NumPy {np.__version__}{boosting_versions()}.",
         "",
         "Regenerate with `make benchmark` or `python scripts/benchmark.py`.",
         "",

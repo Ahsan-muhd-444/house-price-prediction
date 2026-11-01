@@ -26,6 +26,7 @@ On disk a model is a directory holding ``model.joblib`` and ``metadata.json``
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import logging
 import math
@@ -81,6 +82,9 @@ def _sklearn_version() -> tuple[int, int]:
 
 SKLEARN_VERSION = _sklearn_version()
 
+#: Tree ensembles: they need dense input and no feature scaling.
+TREE_MODELS = ("gbm", "xgboost", "lightgbm")
+
 
 # --------------------------------------------------------------------------- estimators
 
@@ -105,6 +109,12 @@ def make_estimator(
             return Lasso(alpha=alpha, max_iter=max_iter, random_state=random_state)
         if model == "gbm":
             return HistGradientBoostingRegressor(random_state=random_state)
+        if model == "xgboost":
+            return boosting_estimator("xgboost", "XGBRegressor", random_state=random_state)
+        if model == "lightgbm":
+            return boosting_estimator(
+                "lightgbm", "LGBMRegressor", random_state=random_state, verbose=-1
+            )
     elif task == "classification":
         if model == "linear":
             return LogisticRegression(max_iter=max_iter, random_state=random_state)
@@ -116,7 +126,32 @@ def make_estimator(
             return l1_logistic_regression(1.0 / alpha, random_state=random_state, max_iter=max_iter)
         if model == "gbm":
             return HistGradientBoostingClassifier(random_state=random_state)
+        if model == "xgboost":
+            return boosting_estimator("xgboost", "XGBClassifier", random_state=random_state)
+        if model == "lightgbm":
+            return boosting_estimator(
+                "lightgbm", "LGBMClassifier", random_state=random_state, verbose=-1
+            )
     raise ConfigError(f"Unsupported task/model combination: {task}/{model}")
+
+
+def boosting_estimator(library: str, name: str, **params: Any) -> Any:
+    """Create an estimator from an optional boosting library.
+
+    XGBoost and LightGBM are the ``boosting`` extra, so they are imported only
+    when one of their models is requested.
+
+    Raises:
+        ConfigError: The library is not installed.
+    """
+    try:
+        module = importlib.import_module(library)
+    except ImportError as exc:
+        raise ConfigError(
+            f"model {library!r} needs the {library} package. Install it with: "
+            'pip install "amesml[boosting]"'
+        ) from exc
+    return getattr(module, name)(**params)
 
 
 def l1_logistic_regression(c: float, *, random_state: int, max_iter: int) -> Any:
@@ -222,7 +257,9 @@ def build_pipeline(plan: FeaturePlan, config: TrainConfig) -> Pipeline:
     """Assemble the unfitted pipeline for a feature plan."""
     # Trees split on thresholds and least squares is scale-invariant, so only
     # the penalised and logistic models need standardised inputs.
-    scale = config.model != "gbm" and not (config.task == "regression" and config.model == "linear")
+    scale = config.model not in TREE_MODELS and not (
+        config.task == "regression" and config.model == "linear"
+    )
     steps: list[tuple[str, Any]] = []
     if config.engineer_features:
         steps.append(("features", FunctionTransformer(add_engineered_features)))
@@ -236,11 +273,12 @@ def build_pipeline(plan: FeaturePlan, config: TrainConfig) -> Pipeline:
                 zero_fill_cols=plan.zero_fill,
                 code_cols=plan.codes,
                 drop_first=config.drop_first,
-                # Histogram gradient boosting rejects sparse input. The linear
+                # The tree ensembles get dense input (histogram gradient
+                # boosting rejects sparse input outright). The linear
                 # models keep scikit-learn's default (sparse here), which is
                 # what makes the defaults reproduce the notebook: for sparse
                 # input LinearRegression uses the iterative LSQR solver.
-                dense=config.model == "gbm",
+                dense=config.model in TREE_MODELS,
             ),
         )
     )

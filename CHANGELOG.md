@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `model: xgboost` and `model: lightgbm` for regression and classification,
+  seeded from `random_state`. They need the new `boosting` extra
+  (`pip install "amesml[boosting]"`); without it, training fails with an
+  error naming the extra. `docs/benchmarks.md` now includes both.
+
 ### Fixed
 
 - `test_notebook_parity.py` asserted the regression figures with an absolute

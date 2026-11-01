@@ -6,6 +6,7 @@ amesml needs Python 3.9 or newer.
 pip install amesml                 # the library and the amesml command
 pip install "amesml[api]"          # plus the REST API (FastAPI, uvicorn)
 pip install "amesml[plots]"        # plus figure generation (matplotlib)
+pip install "amesml[boosting]"     # plus the xgboost and lightgbm models
 ```
 
 Extras can be combined: `pip install "amesml[api,plots]"`.
@@ -42,6 +43,7 @@ download it automatically the first time if you leave the option out.
 |---|---|---|
 | `api` | FastAPI, uvicorn, pydantic | `amesml serve` and `amesml.api` |
 | `plots` | matplotlib | `amesml plots` and `amesml.plots` |
+| `boosting` | XGBoost, LightGBM | `model: xgboost` and `model: lightgbm` |
 | `notebook` | Jupyter, matplotlib, seaborn | the original notebook |
 | `test` | pytest and the above | running the test suite |
 | `dev` | linters, type checker, build tools | contributing |

@@ -8,7 +8,7 @@ import pytest
 
 from amesml import TrainConfig, predict, train
 
-MODELS = ("linear", "ridge", "lasso", "gbm")
+MODELS = ("linear", "ridge", "lasso", "gbm", "xgboost", "lightgbm")
 
 
 @pytest.mark.parametrize("task", ["regression", "classification"])

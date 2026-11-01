@@ -19,6 +19,7 @@ Errors are reported on one line with exit code 1; usage errors exit with 2.
 ```bash
 amesml train                                   # the notebook's linear regression
 amesml train --model gbm                       # gradient boosting
+amesml train --model xgboost                   # XGBoost (or lightgbm); needs amesml[boosting]
 amesml train --task classification             # the notebook's logistic regression
 amesml train --config examples/config.example.yaml --name my-model
 ```

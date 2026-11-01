@@ -1,11 +1,16 @@
 from __future__ import annotations
 
+import sys
+
 import numpy as np
 import pandas as pd
 import pytest
 import sklearn
+from lightgbm import LGBMClassifier, LGBMRegressor
+from scipy import sparse
 from sklearn.ensemble import HistGradientBoostingClassifier, HistGradientBoostingRegressor
 from sklearn.linear_model import Lasso, LinearRegression, LogisticRegression, Ridge
+from xgboost import XGBClassifier, XGBRegressor
 
 from amesml import (
     AmesSchemaError,
@@ -22,6 +27,7 @@ from amesml import models as models_module
 from amesml.data import train_test_split_df
 from amesml.features import ENGINEERED_FEATURES, SOURCE_COLUMNS
 from amesml.models import (
+    build_pipeline,
     l1_logistic_regression,
     make_estimator,
     plan_features,
@@ -31,7 +37,7 @@ from amesml.models import (
     split_for_training,
 )
 
-MODELS = ("linear", "ridge", "lasso", "gbm")
+MODELS = ("linear", "ridge", "lasso", "gbm", "xgboost", "lightgbm")
 
 
 @pytest.mark.parametrize(
@@ -41,15 +47,43 @@ MODELS = ("linear", "ridge", "lasso", "gbm")
         ("regression", "ridge", Ridge),
         ("regression", "lasso", Lasso),
         ("regression", "gbm", HistGradientBoostingRegressor),
+        ("regression", "xgboost", XGBRegressor),
+        ("regression", "lightgbm", LGBMRegressor),
         ("classification", "linear", LogisticRegression),
         ("classification", "ridge", LogisticRegression),
         ("classification", "lasso", LogisticRegression),
         ("classification", "gbm", HistGradientBoostingClassifier),
+        ("classification", "xgboost", XGBClassifier),
+        ("classification", "lightgbm", LGBMClassifier),
     ],
 )
 def test_make_estimator_families(task: str, model: str, expected: type) -> None:
     estimator = make_estimator(task, model, alpha=4.0, random_state=1, max_iter=100)
     assert isinstance(estimator, expected)
+
+
+@pytest.mark.parametrize("task", ["regression", "classification"])
+@pytest.mark.parametrize("model", ["xgboost", "lightgbm"])
+def test_boosting_models_are_seeded(task: str, model: str) -> None:
+    estimator = make_estimator(task, model, alpha=None, random_state=7, max_iter=10)
+    assert estimator.get_params()["random_state"] == 7
+
+
+@pytest.mark.parametrize("model", ["xgboost", "lightgbm"])
+def test_missing_boosting_library_names_the_extra(
+    monkeypatch: pytest.MonkeyPatch, model: str
+) -> None:
+    monkeypatch.setitem(sys.modules, model, None)  # makes `import <model>` fail
+    with pytest.raises(ConfigError, match=r'pip install "amesml\[boosting\]"'):
+        make_estimator("regression", model, alpha=None, random_state=0, max_iter=10)
+
+
+@pytest.mark.parametrize("model", ["gbm", "xgboost", "lightgbm"])
+def test_tree_models_get_dense_input(ames_frame: pd.DataFrame, model: str) -> None:
+    config = TrainConfig(model=model)
+    plan = plan_features(ames_frame, config)
+    preprocess = build_pipeline(plan, config).named_steps["preprocess"]
+    assert not sparse.issparse(preprocess.fit_transform(ames_frame[list(plan.input_columns)]))
 
 
 def test_classification_alpha_is_inverse_c() -> None:

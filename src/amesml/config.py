@@ -27,11 +27,11 @@ if TYPE_CHECKING:
     from typing_extensions import TypeGuard
 
 TaskType = Literal["regression", "classification"]
-ModelType = Literal["linear", "ridge", "lasso", "gbm"]
+ModelType = Literal["linear", "ridge", "lasso", "gbm", "xgboost", "lightgbm"]
 Threshold = Union[float, Literal["median"]]
 
 TASKS: tuple[str, ...] = ("regression", "classification")
-MODELS: tuple[str, ...] = ("linear", "ridge", "lasso", "gbm")
+MODELS: tuple[str, ...] = ("linear", "ridge", "lasso", "gbm", "xgboost", "lightgbm")
 
 #: Regularisation strength used when ``alpha`` is left unset, per (task, model).
 #: Each value was chosen by 5-fold cross-validation on the training split only;
@@ -61,6 +61,8 @@ class TrainConfig:
         model: Estimator family. ``linear`` is ordinary least squares (or
             logistic regression for classification), ``ridge`` and ``lasso``
             add L2 and L1 penalties, ``gbm`` is histogram gradient boosting.
+            ``xgboost`` and ``lightgbm`` use those libraries, which need the
+            ``boosting`` extra.
         target: Name of the sale-price column.
         id_column: Identifier column that is never used as a feature.
         test_size: Fraction of rows held out for evaluation.
@@ -115,7 +117,7 @@ class TrainConfig:
     @property
     def resolved_alpha(self) -> float | None:
         """The regularisation strength actually used, after applying defaults."""
-        if self.model in ("linear", "gbm"):
+        if self.model not in ("ridge", "lasso"):
             return None
         if self.alpha is not None:
             return self.alpha

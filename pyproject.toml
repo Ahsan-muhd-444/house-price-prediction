@@ -53,8 +53,10 @@ dependencies = [
 [project.optional-dependencies]
 api = ["fastapi>=0.100", "uvicorn>=0.23", "pydantic>=2"]
 plots = ["matplotlib>=3.7"]
+# The first releases that work with scikit-learn 1.6's estimator tags.
+boosting = ["xgboost>=2.1.4", "lightgbm>=4.6"]
 test = [
-  "amesml[api,plots]",
+  "amesml[api,plots,boosting]",
   "pytest>=7.4",
   "pytest-cov>=4.1",
   # Starlette's TestClient prefers httpx2 (Python 3.11+) and falls back to httpx.

@@ -70,6 +70,8 @@ class ModelFamily(str, Enum):
     ridge = "ridge"
     lasso = "lasso"
     gbm = "gbm"
+    xgboost = "xgboost"
+    lightgbm = "lightgbm"
 
 
 class Split(str, Enum):

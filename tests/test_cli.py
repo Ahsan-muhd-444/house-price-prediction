@@ -11,7 +11,7 @@ import pandas as pd
 import pytest
 from typer.testing import CliRunner
 
-from amesml import __version__
+from amesml import __version__, load_model, predict
 from amesml import cli as cli_module
 from amesml.cli import app
 
@@ -80,6 +80,39 @@ def test_train_classifier_with_custom_name(ames_csv: Path, tmp_path: Path) -> No
     assert "Accuracy" in result.stdout and "ROC-AUC" in result.stdout
     metadata = json.loads((tmp_path / "best" / "metadata.json").read_text("utf-8"))
     assert (metadata["task"], metadata["model"]) == ("classification", "gbm")
+
+
+@pytest.mark.parametrize("task", ["regression", "classification"])
+@pytest.mark.parametrize("model", ["xgboost", "lightgbm"])
+def test_train_boosting_models(ames_csv: Path, tmp_path: Path, task: str, model: str) -> None:
+    result = invoke(
+        "-q",
+        "train",
+        "--data",
+        str(ames_csv),
+        "--task",
+        task,
+        "--model",
+        model,
+        "--out",
+        str(tmp_path),
+    )
+    assert result.exit_code == 0, result.output
+    model_dir = tmp_path / f"{task}-{model}"
+    metadata = json.loads((model_dir / "metadata.json").read_text("utf-8"))
+    assert (metadata["task"], metadata["model"]) == (task, model)
+    houses = pd.read_csv(ames_csv)
+    assert predict(load_model(model_dir), houses).values.shape == (len(houses),)
+
+
+def test_train_boosting_model_without_the_extra(
+    ames_csv: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setitem(sys.modules, "xgboost", None)
+    result = invoke("train", "--data", str(ames_csv), "--model", "xgboost", "--out", str(tmp_path))
+    assert result.exit_code == 1
+    assert 'pip install "amesml[boosting]"' in result.stderr
+    assert "Traceback" not in result.output
 
 
 def test_config_file_with_cli_overrides(ames_csv: Path, tmp_path: Path) -> None:
