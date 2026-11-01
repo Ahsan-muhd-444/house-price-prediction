@@ -223,6 +223,11 @@ def test_plots_command_wiring(
         return {"target_distribution": out_dir / "amesml_target_distribution.png"}
 
     monkeypatch.setattr(plots, "generate_all", fake_generate_all)
+    # Rich wraps to the console width, and a deep tmp_path pushes the filename
+    # over the edge mid-word on runners with long temp paths. The console is
+    # built at import, so COLUMNS set now would not reach it; widen the console
+    # object itself, for this test only (monkeypatch restores it).
+    monkeypatch.setattr(cli_module.console, "width", 200)
     result = invoke("plots", "--data", str(ames_csv), "--out", str(tmp_path))
     assert result.exit_code == 0, result.output
     assert calls == [(200, tmp_path)]
