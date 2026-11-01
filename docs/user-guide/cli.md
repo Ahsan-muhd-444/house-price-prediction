@@ -61,7 +61,7 @@ classification writes `predicted_label` (1 = at or above the threshold) and
 ## plots
 
 ```bash
-pip install "amesml[plots]"
+pip install "amesml[plots] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"
 amesml plots --out images/
 ```
 
