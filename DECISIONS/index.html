@@ -1,0 +1,2127 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reproducible Ames Housing price prediction as an installable package, CLI and API.">
+      
+      
+        <meta name="author" content="Muhammad Ahsan">
+      
+      
+        <link rel="canonical" href="https://ahsan-muhd-444.github.io/house-price-prediction/DECISIONS/">
+      
+      
+        <link rel="prev" href="../architecture/">
+      
+      
+        <link rel="next" href="../contributing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Design decisions - amesml</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-decisions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="amesml" class="md-header__button md-logo" aria-label="amesml" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amesml
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design decisions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Ahsan-muhd-444/house-price-prediction" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Ahsan-muhd-444/house-price-prediction
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="amesml" class="md-nav__button md-logo" aria-label="amesml" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amesml
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Ahsan-muhd-444/house-price-prediction" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Ahsan-muhd-444/house-price-prediction
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5-minute quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/python-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration file
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model_card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design decisions
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design decisions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#reproducing-the-notebook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducing the notebook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reproducing the notebook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d1-the-defaults-reproduce-the-notebook-exactly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D1. The defaults reproduce the notebook exactly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d2-the-notebooks-linear-regression-was-solved-by-lsqr-and-amesml-keeps-it-so" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D2. The notebook's linear regression was solved by LSQR, and amesml keeps it so
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d3-feature-engineering-is-optional-and-off-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D3. Feature engineering is optional and off by default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d4-only-na-and-empty-fields-mean-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D4. Only NA and empty fields mean "missing"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preprocessing-and-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocessing and models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preprocessing and models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d5-missing-categories-become-an-explicit-missing-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D5. Missing categories become an explicit "Missing" level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d6-drop_first-stays-on-and-unseen-categories-are-reported-by-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D6. drop_first stays on, and unseen categories are reported by name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d7-what-ridge-and-lasso-mean-for-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D7. What ridge and lasso mean for classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d8-default-regularisation-strengths-come-from-cross-validation-on-the-training-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D8. Default regularisation strengths come from cross-validation on the training split
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d9-scale-only-where-it-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D9. Scale only where it matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d10-the-classification-threshold-comes-from-the-training-rows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D10. The classification threshold comes from the training rows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-and-models-on-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data and models on disk
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data and models on disk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d11-the-dataset-download-is-pinned-to-a-commit-and-checksummed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D11. The dataset download is pinned to a commit and checksummed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d12-gitattributes-keeps-the-dataset-byte-identical-on-every-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D12. .gitattributes keeps the dataset byte-identical on every platform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d13-a-model-is-a-directory-with-a-checksum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D13. A model is a directory with a checksum
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d14-training-data-fingerprints-are-platform-independent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D14. Training-data fingerprints are platform-independent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prediction-and-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prediction and the API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prediction and the API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d15-omitted-fields-take-training-defaults-null-means-absent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D15. Omitted fields take training defaults; null means absent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d16-unknown-request-fields-are-rejected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D16. Unknown request fields are rejected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d17-models-load-at-startup-and-startup-fails-loudly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D17. Models load at startup, and startup fails loudly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packaging-and-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packaging and compatibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Packaging and compatibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d18-python-39-stays-supported-and-is-proven-by-tests-not-by-mypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D18. Python 3.9 stays supported, and is proven by tests, not by mypy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d19-runtime-annotated-modules-spell-unions-with-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D19. Runtime-annotated modules spell unions with Optional
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d20-matplotlib-is-an-optional-plots-extra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D20. matplotlib is an optional plots extra
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d21-a-test-extra-and-pinned-linters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D21. A test extra, and pinned linters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d22-tests-treat-every-warning-as-an-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D22. Tests treat every warning as an error
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d23-licence-metadata-uses-the-pep-639-expression-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D23. Licence metadata uses the PEP 639 expression only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d24-the-readme-uses-absolute-image-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D24. The README uses absolute image URLs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d25-the-docker-image-serves-gradient-boosting-and-trains-it-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D25. The Docker image serves gradient boosting and trains it if needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d26-release-and-docs-workflows-guard-themselves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D26. Release and docs workflows guard themselves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d27-notebooks-the-report-and-the-old-models-are-preserved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D27. Notebooks, the report and the old models are preserved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d28-documentation-stays-on-mkdocs-material-for-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D28. Documentation stays on MkDocs Material for now
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bugs-found-by-testing-across-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bugs found by testing across environments
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#reproducing-the-notebook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducing the notebook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reproducing the notebook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d1-the-defaults-reproduce-the-notebook-exactly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D1. The defaults reproduce the notebook exactly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d2-the-notebooks-linear-regression-was-solved-by-lsqr-and-amesml-keeps-it-so" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D2. The notebook's linear regression was solved by LSQR, and amesml keeps it so
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d3-feature-engineering-is-optional-and-off-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D3. Feature engineering is optional and off by default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d4-only-na-and-empty-fields-mean-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D4. Only NA and empty fields mean "missing"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preprocessing-and-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocessing and models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preprocessing and models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d5-missing-categories-become-an-explicit-missing-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D5. Missing categories become an explicit "Missing" level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d6-drop_first-stays-on-and-unseen-categories-are-reported-by-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D6. drop_first stays on, and unseen categories are reported by name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d7-what-ridge-and-lasso-mean-for-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D7. What ridge and lasso mean for classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d8-default-regularisation-strengths-come-from-cross-validation-on-the-training-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D8. Default regularisation strengths come from cross-validation on the training split
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d9-scale-only-where-it-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D9. Scale only where it matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d10-the-classification-threshold-comes-from-the-training-rows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D10. The classification threshold comes from the training rows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-and-models-on-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data and models on disk
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data and models on disk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d11-the-dataset-download-is-pinned-to-a-commit-and-checksummed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D11. The dataset download is pinned to a commit and checksummed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d12-gitattributes-keeps-the-dataset-byte-identical-on-every-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D12. .gitattributes keeps the dataset byte-identical on every platform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d13-a-model-is-a-directory-with-a-checksum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D13. A model is a directory with a checksum
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d14-training-data-fingerprints-are-platform-independent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D14. Training-data fingerprints are platform-independent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prediction-and-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prediction and the API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prediction and the API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d15-omitted-fields-take-training-defaults-null-means-absent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D15. Omitted fields take training defaults; null means absent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d16-unknown-request-fields-are-rejected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D16. Unknown request fields are rejected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d17-models-load-at-startup-and-startup-fails-loudly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D17. Models load at startup, and startup fails loudly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packaging-and-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packaging and compatibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Packaging and compatibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d18-python-39-stays-supported-and-is-proven-by-tests-not-by-mypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D18. Python 3.9 stays supported, and is proven by tests, not by mypy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d19-runtime-annotated-modules-spell-unions-with-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D19. Runtime-annotated modules spell unions with Optional
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d20-matplotlib-is-an-optional-plots-extra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D20. matplotlib is an optional plots extra
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d21-a-test-extra-and-pinned-linters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D21. A test extra, and pinned linters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d22-tests-treat-every-warning-as-an-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D22. Tests treat every warning as an error
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d23-licence-metadata-uses-the-pep-639-expression-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D23. Licence metadata uses the PEP 639 expression only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d24-the-readme-uses-absolute-image-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D24. The README uses absolute image URLs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d25-the-docker-image-serves-gradient-boosting-and-trains-it-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D25. The Docker image serves gradient boosting and trains it if needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d26-release-and-docs-workflows-guard-themselves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D26. Release and docs workflows guard themselves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d27-notebooks-the-report-and-the-old-models-are-preserved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D27. Notebooks, the report and the old models are preserved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d28-documentation-stays-on-mkdocs-material-for-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D28. Documentation stays on MkDocs Material for now
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bugs-found-by-testing-across-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bugs found by testing across environments
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="design-decisions">Design decisions<a class="headerlink" href="#design-decisions" title="Permanent link">&para;</a></h1>
+<p>Decisions made while turning the coursework notebook into the <code>amesml</code>
+package, with the evidence behind each. Entries marked <strong>Deviation</strong> differ
+from the original specification for the conversion; each says why.</p>
+<h2 id="reproducing-the-notebook">Reproducing the notebook<a class="headerlink" href="#reproducing-the-notebook" title="Permanent link">&para;</a></h2>
+<h3 id="d1-the-defaults-reproduce-the-notebook-exactly">D1. The defaults reproduce the notebook exactly<a class="headerlink" href="#d1-the-defaults-reproduce-the-notebook-exactly" title="Permanent link">&para;</a></h3>
+<p>The package's first promise is reproducibility, so <code>TrainConfig()</code> with no
+arguments rebuilds the notebook's models: the same 80/20 split with seed 42,
+the same column typing, imputation and encoding, <code>LinearRegression</code> for price
+and <code>LogisticRegression(max_iter=5000)</code> for the class. Every improvement
+(engineered features, regularised models, gradient boosting) is opt-in.</p>
+<p>Result, verified by <code>tests/test_notebook_parity.py</code> on the real data: MAE
+$21,139.99, RMSE $31,790.77, R² 0.8682386; accuracy 0.9452, precision 0.9254,
+recall 0.9538, F1 0.9394, confusion matrix <code>[[152, 10], [6, 124]]</code> - identical
+to the notebook's recorded outputs.</p>
+<h3 id="d2-the-notebooks-linear-regression-was-solved-by-lsqr-and-amesml-keeps-it-so">D2. The notebook's linear regression was solved by LSQR, and amesml keeps it so<a class="headerlink" href="#d2-the-notebooks-linear-regression-was-solved-by-lsqr-and-amesml-keeps-it-so" title="Permanent link">&para;</a></h3>
+<p>The first version of the package produced dense design matrices and got
+MAE $20,893 and R² 0.853 - not the notebook's numbers, although logistic
+regression matched exactly. The cause: scikit-learn's <code>ColumnTransformer</code>
+returns a <strong>sparse</strong> matrix when fewer than 30% of entries are non-zero, which
+is true here (34 numeric columns beside about 250 one-hot columns). For sparse
+input <code>LinearRegression</code> does not solve least squares exactly; it runs the
+iterative LSQR solver, which stops at a tolerance on this ill-conditioned,
+unscaled, rank-deficient design. The notebook's published figures are LSQR's
+solution. (Logistic regression converges to the same optimum either way.)</p>
+<p>amesml keeps scikit-learn's default sparse output for the linear models, so
+the defaults reproduce the notebook, and gives a dense matrix only to gradient
+boosting, which rejects sparse input. The exact least-squares solution is
+slightly worse on R² (0.853), so nothing is lost.</p>
+<h3 id="d3-feature-engineering-is-optional-and-off-by-default">D3. Feature engineering is optional and off by default<a class="headerlink" href="#d3-feature-engineering-is-optional-and-off-by-default" title="Permanent link">&para;</a></h3>
+<p><strong>Deviation.</strong> The specification asked for feature engineering "reproduced
+from the notebook", but the notebook engineers no features. <code>features.py</code>
+implements the standard Ames derivations (total square footage, house age,
+remodel age, total bathrooms, porch area) as pure functions, enabled with
+<code>engineer_features: true</code>. Turning them on by default would have broken D1.
+Cross-validation shows they help gradient boosting (CV RMSE $29,586 to
+$28,881) and make little difference to the linear models, whose features they
+nearly duplicate. The remodel age is clipped at zero because one record lists
+a remodel after its sale year.</p>
+<h3 id="d4-only-na-and-empty-fields-mean-missing">D4. Only <code>NA</code> and empty fields mean "missing"<a class="headerlink" href="#d4-only-na-and-empty-fields-mean-missing" title="Permanent link">&para;</a></h3>
+<p>In this dataset <code>NA</code> encodes absence ("no pool"), while the string <code>"None"</code> is
+a real category (<code>MasVnrType</code>). pandas' default missing-value list includes
+<code>"None"</code>, so <code>read_ames_csv</code> uses <code>keep_default_na=False</code> with <code>NA</code> and <code>""</code>
+only - as the notebook did. Adding <code>""</code> changes nothing for the Kaggle file
+(it has no empty fields) and makes user-supplied CSVs more forgiving.</p>
+<h2 id="preprocessing-and-models">Preprocessing and models<a class="headerlink" href="#preprocessing-and-models" title="Permanent link">&para;</a></h2>
+<h3 id="d5-missing-categories-become-an-explicit-missing-level">D5. Missing categories become an explicit <code>"Missing"</code> level<a class="headerlink" href="#d5-missing-categories-become-an-explicit-missing-level" title="Permanent link">&para;</a></h3>
+<p><strong>Deviation.</strong> The specification suggested most-frequent imputation for
+categorical columns. In Ames a missing <code>PoolQC</code> means "no pool"; filling it
+with the most frequent value among houses that do have a pool would invent a
+pool. amesml fills text columns with the constant <code>"Missing"</code>, as the notebook
+did. Category codes stored as numbers (<code>MSSubClass</code>, <code>MoSold</code>) get their own
+branch with most-frequent imputation, because one column cannot be encoded
+when it mixes the string <code>"Missing"</code> with integers.</p>
+<p><code>None</code> and <code>pd.NA</code> are converted to NaN before imputation: under pandas 2 an
+object column keeps Python <code>None</code>, which <code>SimpleImputer</code> does not treat as
+missing and which would otherwise become a category of its own. Found by the
+Python 3.9/3.10 test runs.</p>
+<h3 id="d6-drop_first-stays-on-and-unseen-categories-are-reported-by-name">D6. <code>drop_first</code> stays on, and unseen categories are reported by name<a class="headerlink" href="#d6-drop_first-stays-on-and-unseen-categories-are-reported-by-name" title="Permanent link">&para;</a></h3>
+<p>The notebook one-hot encoded with <code>drop="first"</code>, avoiding the dummy-variable
+trap for the unregularised models, and dropping it changes the results. With
+<code>drop</code> set, scikit-learn warns on every call that meets a category absent from
+training, naming columns only by position ("columns [14, 29]"). amesml
+silences that warning and reports the values itself -
+<code>{"RoofMatl": ["Membran"], "Electrical": ["Mix"]}</code> on the reference split -
+in <code>Predictions.unseen_categories</code>, the CLI log and the API response.</p>
+<h3 id="d7-what-ridge-and-lasso-mean-for-classification">D7. What <code>ridge</code> and <code>lasso</code> mean for classification<a class="headerlink" href="#d7-what-ridge-and-lasso-mean-for-classification" title="Permanent link">&para;</a></h3>
+<p><code>ridge</code> is L2-penalised logistic regression and <code>lasso</code> is L1-penalised
+logistic regression - the standard "ridge/lasso logistic regression" - with
+<code>C = 1 / alpha</code>, so in both tasks a larger <code>alpha</code> means a simpler model.
+<code>RidgeClassifier</code> was rejected because it has no <code>predict_proba</code>, and the API
+returns probabilities. L1 uses the <code>liblinear</code> solver: same scores as <code>saga</code>,
+in 0.4 s instead of 14 s.</p>
+<p>scikit-learn 1.8 deprecated <code>LogisticRegression(penalty=...)</code> (removal in
+1.10) in favour of <code>l1_ratio</code>, but before 1.8 <code>l1_ratio</code> is ignored unless
+<code>penalty="elasticnet"</code>. <code>l1_logistic_regression</code> chooses the right spelling
+for the installed version; both branches are tested.</p>
+<h3 id="d8-default-regularisation-strengths-come-from-cross-validation-on-the-training-split">D8. Default regularisation strengths come from cross-validation on the training split<a class="headerlink" href="#d8-default-regularisation-strengths-come-from-cross-validation-on-the-training-split" title="Permanent link">&para;</a></h3>
+<p><code>alpha</code> defaults are 10 (ridge) and 300 (lasso) for regression, 30 and 3 for
+classification. Each was chosen by 5-fold cross-validation on the 1,168
+training rows with the final preprocessing. The test rows were never used:
+picking defaults by test score would leak the test set into the model. One
+early experiment illustrates why this matters: a log-transformed target looked
+better on the test split (R² 0.913) but was far worse under cross-validation
+(RMSE $40,428 against $33,170), because of a few extreme houses.</p>
+<h3 id="d9-scale-only-where-it-matters">D9. Scale only where it matters<a class="headerlink" href="#d9-scale-only-where-it-matters" title="Permanent link">&para;</a></h3>
+<p>Numeric features are standardised for the penalised and logistic models,
+which need it. Plain least squares is scale-invariant and the notebook did not
+scale it (scaling would also change the LSQR path in D2); tree models split on
+thresholds and ignore scale.</p>
+<h3 id="d10-the-classification-threshold-comes-from-the-training-rows">D10. The classification threshold comes from the training rows<a class="headerlink" href="#d10-the-classification-threshold-comes-from-the-training-rows" title="Permanent link">&para;</a></h3>
+<p><code>threshold: median</code> resolves to the median sale price of the training rows
+($165,000 on the reference split), as in the notebook, so no test price
+influences the model. With <code>stratify: true</code> the split is balanced on the
+full-data median, which only shapes the split; the model's threshold is still
+re-derived from its training rows.</p>
+<h2 id="data-and-models-on-disk">Data and models on disk<a class="headerlink" href="#data-and-models-on-disk" title="Permanent link">&para;</a></h2>
+<h3 id="d11-the-dataset-download-is-pinned-to-a-commit-and-checksummed">D11. The dataset download is pinned to a commit and checksummed<a class="headerlink" href="#d11-the-dataset-download-is-pinned-to-a-commit-and-checksummed" title="Permanent link">&para;</a></h3>
+<p><strong>Deviation.</strong> The specification suggested the Kaggle mirror or the De Cock
+original from <code>jse.amstat.org</code>. Kaggle requires a login, and the De Cock file
+has 2,930 rows with different column names (a separate adapter, listed on the
+roadmap). <code>download_ames</code> fetches this repository's own <code>data/train.csv</code> at a
+fixed commit - an immutable URL - checks its SHA-256 before writing anything,
+and writes through a temporary file so a failed or tampered download never
+replaces good data. An explicit missing path is never downloaded to; only the
+default location is.</p>
+<h3 id="d12-gitattributes-keeps-the-dataset-byte-identical-on-every-platform">D12. <code>.gitattributes</code> keeps the dataset byte-identical on every platform<a class="headerlink" href="#d12-gitattributes-keeps-the-dataset-byte-identical-on-every-platform" title="Permanent link">&para;</a></h3>
+<p>The original clone of this repository on Windows produced <code>train.csv</code> with
+CRLF line endings (Git for Windows defaults to <code>core.autocrlf=true</code>), whose
+hash no longer matched the pinned checksum. GitHub's Windows runners use the
+same default. <code>data/** -text</code> stops Git from rewriting the data on any
+platform.</p>
+<h3 id="d13-a-model-is-a-directory-with-a-checksum">D13. A model is a directory with a checksum<a class="headerlink" href="#d13-a-model-is-a-directory-with-a-checksum" title="Permanent link">&para;</a></h3>
+<p><code>save_model</code> writes <code>model.joblib</code> beside <code>metadata.json</code> (configuration,
+metrics, input features and defaults, the training data's fingerprint, library
+versions and the model file's SHA-256), and <code>train</code> adds <code>metrics.json</code>.
+<code>load_model</code> refuses a model file whose checksum no longer matches. This
+catches corrupted and swapped files; it is not a security boundary, because
+unpickling executes code. The documentation says to load only trusted models.</p>
+<h3 id="d14-training-data-fingerprints-are-platform-independent">D14. Training-data fingerprints are platform-independent<a class="headerlink" href="#d14-training-data-fingerprints-are-platform-independent" title="Permanent link">&para;</a></h3>
+<p><code>dataset_fingerprint</code> hashes the frame serialised as CSV with <code>\n</code> line
+endings, not the source file, so the same data has the same fingerprint on
+every operating system and regardless of the file it came from. <code>amesml
+evaluate</code> uses it to warn when you score a model on its own training data.</p>
+<h2 id="prediction-and-the-api">Prediction and the API<a class="headerlink" href="#prediction-and-the-api" title="Permanent link">&para;</a></h2>
+<h3 id="d15-omitted-fields-take-training-defaults-null-means-absent">D15. Omitted fields take training defaults; <code>null</code> means absent<a class="headerlink" href="#d15-omitted-fields-take-training-defaults-null-means-absent" title="Permanent link">&para;</a></h3>
+<p>A request that leaves a field out gets the model's typical training value.
+That value counts "missing" as a value of its own: for <code>PoolQC</code> the most
+common value is missing (no pool). Ignoring missing values would make the
+default <code>"Gd"</code> and give every house with an unspecified pool a good one. A
+field sent as <code>null</code> means "absent" and is handled exactly as in training.</p>
+<h3 id="d16-unknown-request-fields-are-rejected">D16. Unknown request fields are rejected<a class="headerlink" href="#d16-unknown-request-fields-are-rejected" title="Permanent link">&para;</a></h3>
+<p><code>{"GrLivAre": 1500}</code> returns <code>422 Unknown feature(s): GrLivAre</code> instead of
+silently pricing a house of default size. Text in a numeric field is also a
+<code>422</code>. One process can serve one model per task; <code>AMESML_MODEL_PATH</code> takes a
+comma-separated list.</p>
+<h3 id="d17-models-load-at-startup-and-startup-fails-loudly">D17. Models load at startup, and startup fails loudly<a class="headerlink" href="#d17-models-load-at-startup-and-startup-fails-loudly" title="Permanent link">&para;</a></h3>
+<p>A missing or invalid model stops the service before it accepts requests, so a
+misconfigured container fails its deployment instead of its first user.</p>
+<h2 id="packaging-and-compatibility">Packaging and compatibility<a class="headerlink" href="#packaging-and-compatibility" title="Permanent link">&para;</a></h2>
+<h3 id="d18-python-39-stays-supported-and-is-proven-by-tests-not-by-mypy">D18. Python 3.9 stays supported, and is proven by tests, not by mypy<a class="headerlink" href="#d18-python-39-stays-supported-and-is-proven-by-tests-not-by-mypy" title="Permanent link">&para;</a></h3>
+<p>Python 3.9 reached end of life in October 2025, but the specification asked
+for it, and supporting it costs little. mypy 2 can no longer target 3.9, so
+<code>python_version = "3.10"</code> in the mypy configuration and 3.9 compatibility is
+established by running the full suite on 3.9 (locally and in CI). The test
+matrix is Linux, macOS and Windows × Python 3.9, 3.11, 3.12 and 3.13; the
+whole suite was also run locally on 3.10. Python 3.10 and 3.13 are added to
+the classifiers because they are tested.</p>
+<p>The declared minimum versions (<code>pandas&gt;=1.5</code>, <code>numpy&gt;=1.23</code>,
+<code>scikit-learn&gt;=1.3</code>, <code>typer&gt;=0.9</code>, <code>fastapi&gt;=0.100</code>, and so on) were verified
+by resolving the lowest allowed versions on Python 3.9: all 224 tests pass,
+apart from two warnings raised inside those old libraries (Starlette 0.27's
+test client leaves a stream open; joblib 1.3 cannot count CPU cores on
+Windows 11, which removed <code>wmic</code>).</p>
+<h3 id="d19-runtime-annotated-modules-spell-unions-with-optional">D19. Runtime-annotated modules spell unions with <code>Optional</code><a class="headerlink" href="#d19-runtime-annotated-modules-spell-unions-with-optional" title="Permanent link">&para;</a></h3>
+<p>Typer reads the CLI's signatures, and Pydantic the API's models, at runtime.
+Python 3.9 cannot evaluate <code>X | None</code> at runtime, so <code>cli.py</code> and <code>api.py</code> use
+<code>Optional[...]</code> and skip <code>from __future__ import annotations</code>. Every other
+module uses the modern syntax. A comment in each file explains why.</p>
+<h3 id="d20-matplotlib-is-an-optional-plots-extra">D20. matplotlib is an optional <code>plots</code> extra<a class="headerlink" href="#d20-matplotlib-is-an-optional-plots-extra" title="Permanent link">&para;</a></h3>
+<p><strong>Deviation.</strong> The core dependency list has no plotting library, and the API
+image should not carry one, so plotting is the <code>plots</code> extra rather than a
+core dependency. <code>plots.py</code> uses matplotlib's object-oriented <code>Figure</code> API and
+never touches <code>pyplot</code>, so it keeps no global state and needs no display.</p>
+<h3 id="d21-a-test-extra-and-pinned-linters">D21. A <code>test</code> extra, and pinned linters<a class="headerlink" href="#d21-a-test-extra-and-pinned-linters" title="Permanent link">&para;</a></h3>
+<p><strong>Deviation.</strong> The specification listed test tools under <code>dev</code>. A smaller
+<code>test</code> extra installs on every supported Python and is what the CI matrix
+uses. <code>dev</code> adds the tooling, which needs Python 3.11+ (pre-commit and
+pandas-stubs); environment markers keep <code>pip install -e ".[dev]"</code> working on
+older versions. <code>ruff</code> and <code>mypy</code> are pinned exactly so CI cannot start
+failing without a code change; Dependabot proposes upgrades.</p>
+<h3 id="d22-tests-treat-every-warning-as-an-error">D22. Tests treat every warning as an error<a class="headerlink" href="#d22-tests-treat-every-warning-as-an-error" title="Permanent link">&para;</a></h3>
+<p><code>filterwarnings = ["error"]</code> makes deprecations fail the build while they are
+still cheap to fix. Two third-party warnings are ignored, each with a comment:
+Starlette's notice when its test client falls back from <code>httpx2</code> (which needs
+Python 3.11+) to <code>httpx</code>, and pyparsing deprecations triggered inside the old
+matplotlib that Python 3.9 receives. The <code>test</code> extra installs <code>httpx2</code> where
+it can.</p>
+<h3 id="d23-licence-metadata-uses-the-pep-639-expression-only">D23. Licence metadata uses the PEP 639 expression only<a class="headerlink" href="#d23-licence-metadata-uses-the-pep-639-expression-only" title="Permanent link">&para;</a></h3>
+<p><strong>Deviation.</strong> The specification listed a "License :: OSI Approved :: MIT"
+classifier. With <code>license = "MIT"</code> (a PEP 639 licence expression), PEP 639
+forbids licence classifiers alongside it, and PyPI enforces this at upload -
+a rejection that <code>twine check</code> does not catch, so it would surface only
+during a release. The expression alone conveys the licence.</p>
+<h3 id="d24-the-readme-uses-absolute-image-urls">D24. The README uses absolute image URLs<a class="headerlink" href="#d24-the-readme-uses-absolute-image-urls" title="Permanent link">&para;</a></h3>
+<p>The README is also the PyPI project description, where relative image paths
+break. Images point at <code>raw.githubusercontent.com</code> so they render on both.</p>
+<h2 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h2>
+<h3 id="d25-the-docker-image-serves-gradient-boosting-and-trains-it-if-needed">D25. The Docker image serves gradient boosting and trains it if needed<a class="headerlink" href="#d25-the-docker-image-serves-gradient-boosting-and-trains-it-if-needed" title="Permanent link">&para;</a></h3>
+<p>The benchmark shows gradient boosting is the strongest model for both tasks,
+so the image serves <code>regression-gbm</code> and <code>classification-gbm</code>. If the build
+context contains trained models they are copied; otherwise the builder stage
+trains them from <code>data/train.csv</code>, so <code>docker compose up</code> works from a fresh
+clone. <code>.dockerignore</code> is an allowlist (only the package, data and models are
+sent), the runtime stage holds just the virtual environment and the models,
+and the service runs as a non-root user with a health check.</p>
+<h3 id="d26-release-and-docs-workflows-guard-themselves">D26. Release and docs workflows guard themselves<a class="headerlink" href="#d26-release-and-docs-workflows-guard-themselves" title="Permanent link">&para;</a></h3>
+<p>The release workflow refuses a tag that does not match the package version,
+publishes with PyPI trusted publishing (no stored token), then creates the
+GitHub release with generated notes using the <code>gh</code> CLI rather than a
+third-party action. The docs workflow also builds on pull requests, so a
+broken page is caught before merge; it deploys only from <code>main</code>. CI smoke-tests
+the built wheel and the running Docker container over HTTP.</p>
+<h3 id="d27-notebooks-the-report-and-the-old-models-are-preserved">D27. Notebooks, the report and the old models are preserved<a class="headerlink" href="#d27-notebooks-the-report-and-the-old-models-are-preserved" title="Permanent link">&para;</a></h3>
+<p>Nothing was deleted. The notebook keeps its place with outputs stripped (so
+diffs stay readable), and the untouched original with every output is in
+<code>notebooks/archive/</code>. The PDF report moved to <code>docs/</code>. The notebook's pickled
+models moved to <code>models/notebook/</code> with a note: they record no library version
+and are superseded by <code>amesml train</code>. <code>requirements.txt</code> remains as a pointer
+to <code>.[notebook]</code>, so old instructions still work. Ruff excludes <code>notebooks/</code>.</p>
+<h3 id="d28-documentation-stays-on-mkdocs-material-for-now">D28. Documentation stays on MkDocs Material for now<a class="headerlink" href="#d28-documentation-stays-on-mkdocs-material-for-now" title="Permanent link">&para;</a></h3>
+<p>The specification asked for MkDocs Material. Its maintainers have announced
+end of life on 5 May 2027, with Zensical as the successor and a compatibility
+path for existing <code>mkdocs.yml</code> files. Material is fully supported until then,
+so the site uses it as specified; migrating before May 2027 is a small,
+mechanical follow-up.</p>
+<h2 id="bugs-found-by-testing-across-environments">Bugs found by testing across environments<a class="headerlink" href="#bugs-found-by-testing-across-environments" title="Permanent link">&para;</a></h2>
+<p>Running the suite on five Python versions and the minimum dependencies found
+real defects before any user did:</p>
+<ul>
+<li><strong>Lost log lines.</strong> The CLI's log handler did not flush, so under Click 8.1
+  (Python 3.9) warnings from commands that then succeeded were silently lost.</li>
+<li><strong><code>None</code> as a category</strong> under pandas 2 (D5).</li>
+<li><strong>Read-only arrays.</strong> Under pandas 3 copy-on-write, <code>np.asarray</code> on a frame
+  returns a read-only view; the missing-value normaliser now copies.</li>
+<li><strong>Mangled install hint.</strong> Rich parsed <code>[api]</code> in <code>pip install "amesml[api]"</code>
+  as markup and printed <code>pip install "amesml"</code>. All interpolated CLI output is
+  now escaped.</li>
+<li><strong>Click 8.2 removed <code>CliRunner(mix_stderr=...)</code></strong> while Python 3.9 can only
+  install Click 8.1, which needs it; the tests handle both.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../architecture/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../contributing/" class="md-footer__link md-footer__link--next" aria-label="Next: Contributing">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Contributing
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Muhammad Ahsan
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.footer", "navigation.sections", "navigation.top", "search.suggest"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
