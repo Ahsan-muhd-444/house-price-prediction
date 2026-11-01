@@ -871,7 +871,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Unreleased">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#011-2026-11-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [0.1.1] - 2026-11-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[0.1.1] - 2026-11-01">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1010,7 +1021,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Unreleased">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#011-2026-11-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [0.1.1] - 2026-11-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[0.1.1] - 2026-11-01">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1104,6 +1126,7 @@
 <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>, and the project uses
 <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2 id="unreleased"><a href="https://github.com/Ahsan-muhd-444/house-price-prediction/compare/v0.1.0...HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h2 id="011-2026-11-01">[0.1.1] - 2026-11-01<a class="headerlink" href="#011-2026-11-01" title="Permanent link">&para;</a></h2>
 <h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>test_notebook_parity.py</code> asserted the regression figures with an absolute
@@ -1111,12 +1134,24 @@
   The reference values are unchanged; they are now asserted with a 6%
   relative tolerance, covering the 4.3% spread observed across the CI
   matrix. See <code>docs/DECISIONS.md</code> D29.</li>
-<li><code>test_cli.py::test_plots_command_wiring</code> failed wherever the temporary
+<li>
+<p><code>test_cli.py::test_plots_command_wiring</code> failed wherever the temporary
   directory was long enough for Rich to wrap the filename mid-word. The
-  test now widens the console for its own duration.</li>
+  test now widens the console for its own duration.</p>
+</li>
+<li>
+<p>CI no longer fails on <code>ubuntu-latest</code> with Python 3.9: Ubuntu 26.04 runners
+  have no Python 3.9 build, so that one combination is skipped. Python 3.9 is
+  still tested on macOS and Windows.</p>
+</li>
 </ul>
 <h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
 <ul>
+<li>Releases are distributed through GitHub: the release workflow now runs when
+  a GitHub release is published and attaches the wheel and source
+  distribution to it. Install with
+  <code>pip install "amesml @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"</code>.
+  Publishing to PyPI is deferred.</li>
 <li>Documentation no longer claims the defaults reproduce the notebook
   "exactly" or "to the cent" without qualification.</li>
 </ul>

@@ -1183,9 +1183,11 @@ directly.</p>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main<span class="w"> </span>vX.Y.Z
 </code></pre></div>
 <ol>
-<li>The release workflow checks that the tag matches the version, builds the
-   distributions, publishes them to PyPI with trusted publishing and creates a
-   GitHub release with generated notes.</li>
+<li>Publish a GitHub release for the tag (Releases -&gt; Draft a new release -&gt;
+   choose the tag -&gt; Generate release notes -&gt; Publish). The release workflow
+   then checks that the tag matches the version, builds the wheel and source
+   distribution, verifies them with <code>twine check</code>, and attaches them to the
+   release.</li>
 </ol>
 
 

@@ -407,6 +407,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#from-a-release-wheel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From a release wheel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#from-a-clone" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -959,6 +970,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#from-a-release-wheel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From a release wheel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#from-a-clone" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1013,24 +1035,31 @@
 
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
 <p>amesml needs Python 3.9 or newer.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>amesml<span class="w">                 </span><span class="c1"># the library and the amesml command</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"amesml[api]"</span><span class="w">          </span><span class="c1"># plus the REST API (FastAPI, uvicorn)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"amesml[plots]"</span><span class="w">        </span><span class="c1"># plus figure generation (matplotlib)</span>
+<p>amesml is distributed through GitHub releases. Install a tagged version
+straight from the repository:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"amesml @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"</span><span class="w">            </span><span class="c1"># the library and the amesml command</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"amesml[api] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"</span><span class="w">       </span><span class="c1"># plus the REST API (FastAPI, uvicorn)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"amesml[plots] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"</span><span class="w">     </span><span class="c1"># plus figure generation (matplotlib)</span>
 </code></pre></div>
-<p>Extras can be combined: <code>pip install "amesml[api,plots]"</code>.</p>
+<p>Extras can be combined: <code>pip install "amesml[api,plots] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"</code>.</p>
+<h2 id="from-a-release-wheel">From a release wheel<a class="headerlink" href="#from-a-release-wheel" title="Permanent link">&para;</a></h2>
+<p>Every <a href="https://github.com/Ahsan-muhd-444/house-price-prediction/releases">GitHub release</a>
+has the wheel and source distribution attached. Download the <code>.whl</code> and run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>amesml-0.1.1-py3-none-any.whl
+</code></pre></div>
 <h2 id="from-a-clone">From a clone<a class="headerlink" href="#from-a-clone" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ahsan-muhd-444/house-price-prediction.git
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>house-price-prediction
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate<span class="w">          </span><span class="c1"># Windows: .venv\Scripts\activate</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[api,plots]"</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ahsan-muhd-444/house-price-prediction.git
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>house-price-prediction
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate<span class="w">          </span><span class="c1"># Windows: .venv\Scripts\activate</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[api,plots]"</span>
 </code></pre></div>
 <p>For development, install <code>".[dev]"</code> instead; see
 <a href="../../contributing/">Contributing</a>.</p>
 <h2 id="the-dataset">The dataset<a class="headerlink" href="#the-dataset" title="Permanent link">&para;</a></h2>
 <p>The repository includes the Kaggle training file at <code>data/train.csv</code>. When you
-install from PyPI, download it once:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>amesml<span class="w"> </span>data<span class="w"> </span>download
+install from GitHub or a release wheel, download it once:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>amesml<span class="w"> </span>data<span class="w"> </span>download
 </code></pre></div>
 <p>This fetches a copy pinned to a fixed commit of the project repository and
 verifies its SHA-256 before saving it. Commands that take <code>--data</code> also
