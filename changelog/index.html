@@ -871,6 +871,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -897,7 +925,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed" class="md-nav__link">
+  <a href="#changed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -982,6 +1010,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1008,7 +1064,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed" class="md-nav__link">
+  <a href="#changed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1048,6 +1104,22 @@
 <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>, and the project uses
 <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2 id="unreleased"><a href="https://github.com/Ahsan-muhd-444/house-price-prediction/compare/v0.1.0...HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>test_notebook_parity.py</code> asserted the regression figures with an absolute
+  tolerance of one cent, which only held on Windows with Python 3.11-3.13.
+  The reference values are unchanged; they are now asserted with a 6%
+  relative tolerance, covering the 4.3% spread observed across the CI
+  matrix. See <code>docs/DECISIONS.md</code> D29.</li>
+<li><code>test_cli.py::test_plots_command_wiring</code> failed wherever the temporary
+  directory was long enough for Rich to wrap the filename mid-word. The
+  test now widens the console for its own duration.</li>
+</ul>
+<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Documentation no longer claims the defaults reproduce the notebook
+  "exactly" or "to the cent" without qualification.</li>
+</ul>
 <h2 id="010-2026-11-01"><a href="https://github.com/Ahsan-muhd-444/house-price-prediction/releases/tag/v0.1.0">0.1.0</a> - 2026-11-01<a class="headerlink" href="#010-2026-11-01" title="Permanent link">&para;</a></h2>
 <p>First packaged release of the house-price-prediction coursework as <code>amesml</code>.</p>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
@@ -1056,9 +1128,12 @@
   <code>build_preprocessor</code>, <code>train_regressor</code>, <code>train_classifier</code>, <code>train</code>,
   <code>evaluate_regressor</code>, <code>evaluate_classifier</code>, <code>predict</code>, <code>save_model</code> and
   <code>load_model</code>.</li>
-<li>Defaults that reproduce the original notebook's published results exactly
+<li>Defaults that reproduce the original notebook's published results closely
   (linear regression MAE $21,139.99, R² 0.868; logistic regression accuracy
-  94.5%, F1 93.9%).</li>
+  94.5%, F1 93.9%). The classification figures reproduce exactly; the
+  regression figures reproduce to the cent on Windows with Python 3.11-3.13
+  and to within about 5% elsewhere, because they come from an iterative
+  solver on an ill-conditioned matrix. See <code>docs/DECISIONS.md</code> D1.</li>
 <li>Ridge, lasso and histogram gradient-boosting models for both regression and
   above/below-median classification, with cross-validated default
   regularisation.</li>
@@ -1086,7 +1161,7 @@
 <li>Contributing guide, Code of Conduct, security policy, governance, support
   page, citation metadata, and issue and pull request templates.</li>
 </ul>
-<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Repository reorganised: the report moved to <code>docs/</code>, the notebook's pickled
   models to <code>models/notebook/</code>, and the notebook is committed with its outputs

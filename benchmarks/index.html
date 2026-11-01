@@ -1038,7 +1038,8 @@
 model's default configuration. Two views of each model:</p>
 <ul>
 <li><strong>Held-out test</strong>: the notebook's split (80/20, seed 42; 292 test houses).
-  The <code>linear</code> rows reproduce the published notebook results exactly.</li>
+  The <code>linear</code> rows reproduce the published notebook results to within
+  about 5%; see docs/DECISIONS.md D1.</li>
 <li><strong>5-fold CV</strong>: cross-validation over all 1,460 houses, mean ± standard
   deviation. Less dependent on which houses land in one split, so this is
   the column to compare models by.</li>

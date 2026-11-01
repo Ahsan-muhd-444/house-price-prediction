@@ -1266,7 +1266,12 @@ considerations</em>).</p>
   seed 42 - the notebook's split.</li>
 </ul>
 <h2 id="quantitative-analyses">Quantitative analyses<a class="headerlink" href="#quantitative-analyses" title="Permanent link">&para;</a></h2>
-<p>Held-out test split, default configuration of each model:</p>
+<p>Held-out test split, default configuration of each model. The linear
+regression row reproduces the notebook to the cent only on Windows with
+Python 3.11-3.13; on other platforms and Python versions it lands within
+about 5%, because that model is fitted by an iterative solver on an
+ill-conditioned sparse matrix (see DECISIONS D1 and D2). The classification
+figures reproduce exactly everywhere.</p>
 <table>
 <thead>
 <tr>

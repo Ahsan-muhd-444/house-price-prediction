@@ -815,10 +815,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#d1-the-defaults-reproduce-the-notebook-exactly" class="md-nav__link">
+  <a href="#d1-the-defaults-reproduce-the-notebook-closely" class="md-nav__link">
     <span class="md-ellipsis">
       
-        D1. The defaults reproduce the notebook exactly
+        D1. The defaults reproduce the notebook closely
       
     </span>
   </a>
@@ -1220,6 +1220,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Bugs found by testing across environments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d29-the-notebook-parity-test-uses-a-relative-tolerance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D29. The notebook-parity test uses a relative tolerance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1359,10 +1376,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#d1-the-defaults-reproduce-the-notebook-exactly" class="md-nav__link">
+  <a href="#d1-the-defaults-reproduce-the-notebook-closely" class="md-nav__link">
     <span class="md-ellipsis">
       
-        D1. The defaults reproduce the notebook exactly
+        D1. The defaults reproduce the notebook closely
       
     </span>
   </a>
@@ -1765,6 +1782,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Bugs found by testing across environments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d29-the-notebook-parity-test-uses-a-relative-tolerance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D29. The notebook-parity test uses a relative tolerance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1792,7 +1826,7 @@
 package, with the evidence behind each. Entries marked <strong>Deviation</strong> differ
 from the original specification for the conversion; each says why.</p>
 <h2 id="reproducing-the-notebook">Reproducing the notebook<a class="headerlink" href="#reproducing-the-notebook" title="Permanent link">&para;</a></h2>
-<h3 id="d1-the-defaults-reproduce-the-notebook-exactly">D1. The defaults reproduce the notebook exactly<a class="headerlink" href="#d1-the-defaults-reproduce-the-notebook-exactly" title="Permanent link">&para;</a></h3>
+<h3 id="d1-the-defaults-reproduce-the-notebook-closely">D1. The defaults reproduce the notebook closely<a class="headerlink" href="#d1-the-defaults-reproduce-the-notebook-closely" title="Permanent link">&para;</a></h3>
 <p>The package's first promise is reproducibility, so <code>TrainConfig()</code> with no
 arguments rebuilds the notebook's models: the same 80/20 split with seed 42,
 the same column typing, imputation and encoding, <code>LinearRegression</code> for price
@@ -1801,7 +1835,10 @@ and <code>LogisticRegression(max_iter=5000)</code> for the class. Every improvem
 <p>Result, verified by <code>tests/test_notebook_parity.py</code> on the real data: MAE
 $21,139.99, RMSE $31,790.77, R² 0.8682386; accuracy 0.9452, precision 0.9254,
 recall 0.9538, F1 0.9394, confusion matrix <code>[[152, 10], [6, 124]]</code> - identical
-to the notebook's recorded outputs.</p>
+to the notebook's recorded outputs on Windows with Python 3.11-3.13.</p>
+<p>The classification figures reproduce exactly on every platform. The
+regression figures do not: they land within about 5% elsewhere, for the
+reason given in D2 and quantified in D29.</p>
 <h3 id="d2-the-notebooks-linear-regression-was-solved-by-lsqr-and-amesml-keeps-it-so">D2. The notebook's linear regression was solved by LSQR, and amesml keeps it so<a class="headerlink" href="#d2-the-notebooks-linear-regression-was-solved-by-lsqr-and-amesml-keeps-it-so" title="Permanent link">&para;</a></h3>
 <p>The first version of the package produced dense design matrices and got
 MAE $20,893 and R² 0.853 - not the notebook's numbers, although logistic
@@ -2018,6 +2055,63 @@ real defects before any user did:</p>
 <li><strong>Click 8.2 removed <code>CliRunner(mix_stderr=...)</code></strong> while Python 3.9 can only
   install Click 8.1, which needs it; the tests handle both.</li>
 </ul>
+<h3 id="d29-the-notebook-parity-test-uses-a-relative-tolerance">D29. The notebook-parity test uses a relative tolerance<a class="headerlink" href="#d29-the-notebook-parity-test-uses-a-relative-tolerance" title="Permanent link">&para;</a></h3>
+<p><strong>Deviation.</strong> D1 originally claimed the regression figures reproduce
+exactly. They do not, outside one environment.</p>
+<p><code>tests/test_notebook_parity.py</code> asserted MAE, RMSE and R2 with an absolute
+tolerance of one cent. That passed on Windows with Python 3.11-3.13 and
+failed on every Linux and macOS job, and on Windows with Python 3.9.
+Observed MAE across the CI matrix:</p>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th style="text-align: right;">MAE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows, Python 3.11-3.13</td>
+<td style="text-align: right;">$21,139.99 (the notebook's figure)</td>
+</tr>
+<tr>
+<td>macOS, Python 3.11-3.13</td>
+<td style="text-align: right;">$20,850.57</td>
+</tr>
+<tr>
+<td>Ubuntu 3.11, Windows 3.9</td>
+<td style="text-align: right;">$20,230.73</td>
+</tr>
+</tbody>
+</table>
+<p>A spread of about 4.3%.</p>
+<p><strong>The cause is the solver, not the split.</strong> The split is seeded with 42 and
+is identical everywhere - the same 292 test rows. Holding that split fixed
+and changing only how the linear model is fitted moves MAE from $21,139.99
+(sparse, LSQR) to $20,893.06 (dense, exact least squares): about $247 on
+identical data. As D2 explains, the design matrix is sparse, ill-conditioned
+and rank-deficient, so <code>LinearRegression</code> runs LSQR, which stops on a
+tolerance rather than converging. Where it stops depends on the
+scikit-learn, scipy and BLAS build in use.</p>
+<p><strong>Decision.</strong> Keep $21,139.99 and the other published figures as the
+reference values, and assert them with <code>pytest.approx(..., rel=0.06)</code>.</p>
+<p><strong>Rejected alternatives.</strong></p>
+<ul>
+<li><em>Pin the dependencies to the versions that produce $21,139.99.</em> <code>amesml</code> is
+  a library. Freezing downstream users to one resolution of scikit-learn,
+  scipy and numpy so that one test passes is a worse trade than a looser
+  assertion.</li>
+<li><em>Mark the test <code>xfail</code> off Windows.</em> That hides the check across most of
+  the matrix, which is where a regression would actually surface.</li>
+<li><em>Drop the parity test.</em> It is the package's central correctness claim.</li>
+</ul>
+<p>6% leaves margin over the observed 4.3% while staying far tighter than the
+gap to any other model: ridge ($19,006), lasso ($18,550) and gradient
+boosting ($16,826) all sit 10-20% from the linear baseline, so a modelling
+or preprocessing regression still fails the test.</p>
+<p>The classification figures are asserted exactly, unchanged: logistic
+regression converges to the same optimum on sparse and dense input (D2), and
+reproduced to the cent on all sixteen CI jobs.</p>
 
 
 
