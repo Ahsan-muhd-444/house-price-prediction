@@ -3,7 +3,7 @@
 ## 1. Install and get the data
 
 ```bash
-pip install "amesml[api]"
+pip install "amesml[api] @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"
 amesml data download
 ```
 
