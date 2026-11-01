@@ -7,7 +7,7 @@ come from `scripts/benchmark.py` and the held-out split described below.
 ## Model details
 
 - **Developer:** Muhammad Ahsan, Software Engineering, COMSATS University Lahore.
-- **Version:** amesml 0.1.0 (November 2026).
+- **Version:** amesml 0.1.1 (November 2026).
 - **Type:** supervised tabular models built with scikit-learn.
     - *Regression* predicts the sale price in US dollars.
     - *Classification* predicts whether a house sells at or above a threshold
@@ -142,7 +142,7 @@ at about $504,000 by gradient boosting).
 ## How to reproduce
 
 ```bash
-pip install amesml
+pip install "amesml @ git+https://github.com/Ahsan-muhd-444/house-price-prediction@v0.1.1"
 amesml train                                  # notebook linear regression
 amesml train --task classification            # notebook logistic regression
 amesml train --model gbm
