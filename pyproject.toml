@@ -65,7 +65,7 @@ test = [
 # proposes upgrades. The tooling needs Python 3.11+, the package itself 3.9+.
 dev = [
   "amesml[test]",
-  "ruff==0.17.3",
+  "ruff==0.17.4",
   "mypy==2.4.1; python_version >= '3.11'",
   "pandas-stubs==3.1.0.261029; python_version >= '3.11'",
   "types-PyYAML; python_version >= '3.11'",
